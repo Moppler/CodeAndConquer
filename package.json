@@ -1,8 +1,8 @@
 {
-  "name": "apirts",
-  "version": "1.0.0",
-  "description": "This is an RTS game specifically for programmers. The only way to play the came is by interacting with an API. The game servers provide a platform and a visual representation for players and spectators to see what is happening. however all gameplay is performed via an API. The idea is that players create programs that interact with the API to see what is happening and to issue commands.",
-  "main": ".eslintrc.js",
+  "name": "@moppler/codeandconquer",
+  "version": "0.1.0",
+  "description": "",
+  "main": "src/server.ts",
   "scripts": {
     "start": "nodemon --exec ts-node src/server.ts",
     "test": "jest"
