@@ -11,10 +11,17 @@ export type TrainUnitCommand = {
   unitType: keyof typeof units;
 };
 
-type Command = TrainUnitCommand;
+export type MoveUnitCommand = {
+  type: 'moveUnit',
+  destinationPosition: { x: number; y: number; };
+}
+
+type StructureCommands = TrainUnitCommand;
+type UnitCommands = MoveUnitCommand;
 
 type PendingCommands = {
-  structures: { [k: structureId]: Command; };
+  structures: { [k: structureId]: StructureCommands; };
+  units: { [k: unitId]: UnitCommands; };
 };
 
 export default class Game {
@@ -83,6 +90,14 @@ export default class Game {
             const structureCommand = commands.structures[structureId];
 
             this.structures[structureId].processCommand(structureCommand);
+          });
+        }
+
+        if (commands.units) {
+          Object.keys(commands.units).map((unitId) => {
+            const unitCommand = commands.units[unitId];
+
+            this.units[unitId].processCommand(unitCommand);
           });
         }
       }

@@ -13,11 +13,9 @@ export default class CommandCentreStructure extends Structure {
 
   processCommand(command: PossibleCommandType) {
     if (command.type === 'trainUnit') {
+      // console.log(`Structure ${this.id} generated a ${command.unitType}`);
       const newUnit = unitFactory(command.unitType, this.owner, this.position);
-
       this.game.units[newUnit.id] = newUnit;
-
-      console.log(`Structure ${this.id} generated a ${command.unitType}`);
     }
   }
 }
