@@ -1,3 +1,4 @@
+import { Logger } from 'pino';
 import Game from '../../src/game';
 import CommandCentreStructure from '../../src/structure/commandCentre';
 
@@ -8,7 +9,8 @@ describe('Command Centre Structure', () => {
         const mockGame = {
           units: {}
         } as Game;
-        const structure = new CommandCentreStructure('TestStructure', 'PlayerId', { x: 0, y: 0 }, mockGame);
+        const mockLogger = {} as Logger;
+        const structure = new CommandCentreStructure('TestStructure', 'PlayerId', { x: 0, y: 0 }, mockGame, mockLogger);
 
         expect(Object.keys(mockGame.units).length).toBe(0);
 

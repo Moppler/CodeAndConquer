@@ -6,10 +6,10 @@ import unitFactory, { units } from '../unitFactory';
 
 type PossibleCommandType = TrainUnitCommand;
 
-export default class CommandCentreStructure extends Structure {
+export default class BarracksStructure extends Structure {
 
   constructor(id: structureId, owner: playerId, pos: { x: number; y: number }, game: Game, logger: Logger) {
-    super(id, owner, pos, 'commandCentre', game, logger);
+    super(id, owner, pos, 'barracks', game, logger);
   }
 
   processCommand(command: PossibleCommandType): void {

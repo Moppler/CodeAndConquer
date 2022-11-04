@@ -2,9 +2,10 @@ import { ulid } from 'ulid';
 import { GameMap, mapFactory } from './mapFactory';
 import Player, { playerId } from './player';
 import Structure, { structureId } from './structure';
-import structureFactory, { PossibleStructure } from './structureFactory';
+import structureFactory, { PossibleStructure, structures } from './structureFactory';
 import { unitId } from './unit';
 import { PossibleUnitType, units } from './unitFactory';
+import { Logger } from 'pino';
 
 export type TrainUnitCommand = {
   type: 'trainUnit',
@@ -14,6 +15,11 @@ export type TrainUnitCommand = {
 export type MoveUnitCommand = {
   type: 'moveUnit',
   destinationPosition: { x: number; y: number; };
+}
+
+export type ConstructStructure = {
+  type: 'constructStructure',
+  structureType: keyof typeof structures;
 }
 
 type StructureCommands = TrainUnitCommand;
@@ -27,6 +33,8 @@ type PendingCommands = {
 export default class Game {
   public id: string;
 
+  public logger: Logger;
+
   public tick: number;
   public players: Player[];
   public commands: { [k: playerId]: PendingCommands }
@@ -39,8 +47,10 @@ export default class Game {
   public status: 'waitingForPlayers' | 'ready' | 'inProgress';
   public startTime: number | undefined;
 
-  constructor(id: string, map: GameMap) {
+  constructor(id: string, map: GameMap, logger: Logger) {
     this.id = id;
+
+    this.logger = logger;
 
     this.tick = 0;
     this.players = [];
@@ -56,7 +66,7 @@ export default class Game {
   }
 
   processTick() {
-    console.log('Process Tick', this.tick);
+    this.logger.info({ message: 'Process Tick', gameTick: this.tick});
     
     if (this.status === 'waitingForPlayers' && this.players.length < 2) {
       return;
@@ -69,12 +79,13 @@ export default class Game {
     }
 
     // Setup Game
-    if(this.startTime && this.startTime < Date.now()) {
+    if(this.startTime && this.startTime < Date.now() && this.status === 'ready') {
       this.status = 'inProgress';
       this.players.forEach((player, index) => {
-        const newCommandCentre = structureFactory('commandCentre', player.id, this.map.spawnPoints[index], this)
+        const newCommandCentre = structureFactory('commandCentre', player.id, this.map.spawnPoints[index], this, this.logger)
         this.structures[newCommandCentre.id] = newCommandCentre;
       });
+      return;
     }
 
     console.log('=== Process Commands ===');
@@ -109,10 +120,11 @@ export default class Game {
     this.tick++;
   }
 
-  static createGame() {
+  static createGame(logger: Logger) {
     const newId = ulid();
+    const childLogger = logger.child({ gameId: newId });
     const selectedGameMap = mapFactory['testMap'];
-    return new Game(newId, selectedGameMap);
+    return new Game(newId, selectedGameMap, childLogger);
   }
 
   addPlayer(player: Player) {
