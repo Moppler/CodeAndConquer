@@ -59,7 +59,7 @@ describe('API', () => {
           'UnitId': {
             id: 'UnitId',
             owner: 'PlayerId',
-            type: 'TestUnit',
+            type: 'constructionUnit',
             position: { x: 1, y: 1 },
             game: {} as Game,
             logger: {} as Logger,
@@ -99,7 +99,7 @@ describe('API', () => {
           'UnitId': {
             id: 'UnitId',
             owner: 'PlayerId',
-            type: 'TestUnit',
+            type: 'constructionUnit',
             position: { x: 1, y: 1 }
           }
         },

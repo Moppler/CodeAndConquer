@@ -15,12 +15,10 @@ export default class ConstructionUnit extends Unit {
 
   processCommand(command: PossibleCommandType) {
     if (command.type === 'moveUnit') {
-      // console.log(`Unit ${this.id} moved from ${this.position} to ${command.destinationPosition}`);
       this.moveUnit(command.destinationPosition);
     }
     if (command.type === 'constructStructure') {
       if (!structures[command.structureType]) {
-        
         return;
       }
       this.constructStructure(command.structureType, this.position);
