@@ -83,15 +83,16 @@ export default class Game {
       this.status = 'inProgress';
       this.players.forEach((player, index) => {
         const newCommandCentre = structureFactory('commandCentre', player.id, this.map.spawnPoints[index], this, this.logger)
+        
         this.structures[newCommandCentre.id] = newCommandCentre;
       });
       return;
     }
 
-    console.log('=== Process Commands ===');
+    // console.log('=== Process Commands ===');
     // For Each Player
     this.players.forEach((player) => {
-      console.log(player.id);
+      // console.log(player.id);
       
       const commands = this.commands[player.id];
 
@@ -99,7 +100,7 @@ export default class Game {
         if (commands.structures) {
           Object.keys(commands.structures).map((structureId) => {
             const structureCommand = commands.structures[structureId];
-
+            
             this.structures[structureId].processCommand(structureCommand);
           });
         }
