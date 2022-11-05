@@ -42,6 +42,7 @@ describe('API', () => {
           spawnPoints: [],
           terrain: [] 
         },
+        winner: undefined,
         structures: {
           'StructureId': {
             id: 'StructureId',
@@ -67,6 +68,9 @@ describe('API', () => {
               throw new Error('Function not implemented.');
             },
             processCommand: function (): void {
+              throw new Error('Function not implemented.');
+            },
+            captureStructure: function (): void {
               throw new Error('Function not implemented.');
             },
           }

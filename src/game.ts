@@ -44,8 +44,9 @@ export default class Game {
   public structures: { [id: structureId]: PossibleStructure };
   public units: { [id: unitId]: PossibleUnitType };
 
-  public status: 'waitingForPlayers' | 'ready' | 'inProgress';
+  public status: 'waitingForPlayers' | 'ready' | 'inProgress' | 'finished';
   public startTime: number | undefined;
+  public winner: playerId;
 
   constructor(id: string, map: GameMap, logger: Logger) {
     this.id = id;
@@ -63,6 +64,7 @@ export default class Game {
 
     this.status = 'waitingForPlayers';
     this.startTime = undefined;
+    this.winner = undefined;
   }
 
   processTick() {
@@ -78,6 +80,8 @@ export default class Game {
       return;
     }
 
+    if (this.status === 'finished') return;
+
     // Setup Game
     if(this.startTime && this.startTime < Date.now() && this.status === 'ready') {
       this.status = 'inProgress';
@@ -87,6 +91,14 @@ export default class Game {
         this.structures[newCommandCentre.id] = newCommandCentre;
       });
       return;
+    }
+
+    // Check For Win Conditions
+    // There is only one one owner
+    const commandCentreOwners = [...new Set(Object.values(this.structures).filter((structure) => structure.type === 'commandCentre').map((structure) => structure.owner))];
+    if (commandCentreOwners.length === 1) {
+      this.winner = commandCentreOwners[0];
+      this.status = 'finished';
     }
 
     // console.log('=== Process Commands ===');
